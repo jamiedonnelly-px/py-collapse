@@ -27,7 +27,7 @@ set(CORE_HEADERS
 add_library(core STATIC ${CORE_SOURCES} ${CORE_HEADERS})
 
 # Add the executable
-add_executable(main src/main.cpp)  # Add this line (adjust path if needed)
+add_executable(main.o src/main.cpp)  # Add this line (adjust path if needed)
 
 # Link the core library to main
 target_link_libraries(main PRIVATE core)

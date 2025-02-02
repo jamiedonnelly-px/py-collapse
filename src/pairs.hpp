@@ -4,15 +4,20 @@
 #include "types.hpp"
 
 class IndexPair{
-
     public:
+        IndexPair() : vert1() {};
         bool operator==(IndexPair& other);
-}
 
-class ValidPair{
+    private:
+        RowVectorD vert1; 
+        RowVectorD vert2;
+
+};
+
+class VertexPair{
 
     public:
-        ValidPair(RowVectorD v1, RowVectorD v2) : _v1(v1), _v2(v2){};
+        VertexPair(RowVectorD v1, RowVectorD v2) : _v1(v1), _v2(v2){};
         int i1, i2;
 
     private:
@@ -20,6 +25,6 @@ class ValidPair{
         RowVectorD _v2;
 };
 
-std::vector<ValidPair> valid_pairs(Mesh& mesh);
+std::vector<VertexPair> vertex_pairs(Mesh& mesh);
 
 void _pair_test(Mesh& mesh);
