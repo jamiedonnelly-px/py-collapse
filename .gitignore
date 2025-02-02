@@ -59,7 +59,7 @@ cover/
 *.log
 local_settings.py
 db.sqlite3
-db.sqlite3-journal
+db.sqlite-journal
 
 # Flask stuff:
 instance/
@@ -173,5 +173,5 @@ cython_debug/
 # outputfiles 
 *.o
 
-# vscode
-.vscode/
+# vscode - seems really buggy in git tracking
+.vscode/    
