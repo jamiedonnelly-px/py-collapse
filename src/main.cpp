@@ -2,6 +2,9 @@
 // #include<pybind11/eigen.h>
 //namespace py = pybind11;
 
+#include<iostream>
+#include<Eigen/Core>
+
 #include "pairs.hpp"
 #include "mesh.hpp"
 #include "types.hpp"
@@ -13,7 +16,11 @@ int main(){
     FaceMatrix faces = Eigen::MatrixXi::Random(n_verts * 2, 3);
     Mesh mesh = Mesh(verts, faces);
 
-    _pair_test(mesh);
+    std::cout << "Eigen version: " 
+              << EIGEN_WORLD_VERSION << "."
+              << EIGEN_MAJOR_VERSION << "."
+              << EIGEN_MINOR_VERSION << std::endl;
+
 
     return 0;
 }

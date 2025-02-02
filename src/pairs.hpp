@@ -25,6 +25,5 @@ class VertexPair{
         RowVectorD _v2;
 };
 
-std::vector<VertexPair> vertex_pairs(Mesh& mesh);
-
-void _pair_test(Mesh& mesh);
+// std::vector<VertexPair> vertex_pairs(Mesh& mesh);
+// void _pair_test(Mesh& mesh);

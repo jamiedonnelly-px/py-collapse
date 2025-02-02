@@ -10,9 +10,6 @@ std::vector<VertexPair> valid_pairs(Mesh mesh){
 
     std::vector<VertexPair> all_pairs;
 
-    
-
-
     for (int i; i < faces.rows(); i++){
         RowVectorI face = faces.row(i);
         std::cout << face << std::endl;
