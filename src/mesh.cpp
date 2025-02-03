@@ -32,6 +32,7 @@ bool Pair::operator!=(const Pair& other) const{
     return !(*this == other);
 };
 
+// Used to find pairs with an edge between them 
 void Mesh::truePairs() {
     auto max_index = faces().rows();
     size_t total_pairs = max_index * 3;  // 3 pairs per face
@@ -39,17 +40,17 @@ void Mesh::truePairs() {
     // Pre-allocate the vector
     _pairs.resize(total_pairs);
     
+    // rolls out the loop and partitions the index over the TIDs
     #pragma omp parallel for
-    for (size_t i = 0; i < max_index; i++) {
+    for (auto i = 0; i < max_index; i++) {
         const auto& row = faces().row(i);
-        size_t pairs_idx = i * 3;  // Each face gets 3 consecutive pairs
-        
+        auto pairs_idx = i * 3;  // Each face gets 3 consecutive pairs
         for (auto j = 0; j < row.cols(); j++) {
             const auto& index_1{row(j)}, index_2{row((j+1)%3)};
             const RowVectorD& vertex_1(verts().row(index_1)), vertex_2(verts().row(index_2));
             _pairs[pairs_idx + j] = Pair{
-                index_1,
-                index_2,
+                (size_t)index_1,
+                (size_t)index_2,
                 vertex_1,
                 vertex_2,
                 true,
@@ -59,13 +60,16 @@ void Mesh::truePairs() {
     }
 }
 
+// Find those valid pairs determined by euclidean distance threshold
 void Mesh::distancePairs(double t) {
     auto max_index = verts().rows();    
+    // because we cant pre-allocate the vector we double #pragma 
     #pragma omp parallel
     {
-        std::vector<Pair> local_pairs;  // Local to each thread
+        // Initialise vector local to each thread
+        std::vector<Pair> local_pairs;  
         #pragma omp for
-        for (size_t i = 0; i < max_index; i++) {
+        for (auto i = 0; i < max_index; i++) {
             for (auto j = 0; j < max_index; j++) {
                 if (i != j) {
                     const auto& v1(verts().row(i)), v2(verts().row(j));
@@ -93,7 +97,6 @@ void Mesh::distancePairs(double t) {
                 }
             }
         }
-        
         #pragma omp critical
         {
             _pairs.insert(
@@ -105,6 +108,7 @@ void Mesh::distancePairs(double t) {
     }
 }
 
+// Remove duplicated pairs in undirected graph
 void Mesh::getUnique() {
     // First parallel sort
     #pragma omp parallel
@@ -149,6 +153,7 @@ void Mesh::getUnique() {
 
 void Mesh::findPairs(double t){
     truePairs();
+    
     if (t > 0){
         distancePairs(t);
     }
