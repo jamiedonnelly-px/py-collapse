@@ -1,4 +1,5 @@
 #include<omp.h>
+#include<set>
 #include<iostream>
 
 #include "mesh.hpp"
@@ -6,6 +7,11 @@
 
 using namespace Eigen;
 using namespace std;
+
+// this is not a valid sorting, just to determine uniqueness. 
+bool Pair::operator<(const Pair& other) const {
+    return distance < other.distance;
+}
 
 bool Pair::operator==(const Pair& other) const{
     bool indices_match = (vertex_1_index == other.vertex_1_index && 
@@ -39,10 +45,6 @@ void Mesh::truePairs(){
     {
         int tid = omp_get_thread_num();
         int num_threads = omp_get_num_threads();
-        #pragma omp single
-        {
-            cout << "OMP_NUM_THREADS: " << num_threads << endl;
-        }
         std::pair<size_t, size_t> tid_limits = partitionIndices(num_threads, tid, max_index);
         size_t pairs_start = tid_limits.first * 3;
         size_t pairs_idx = pairs_start; 
@@ -110,4 +112,17 @@ void Mesh::distancePairs(double t){
             );
         }
     }
+};
+
+void Mesh::getUnique() {
+    std::set<Pair> s(_pairs.begin(), _pairs.end());
+    _pairs = std::vector<Pair>(s.begin(), s.end());
+};
+
+void Mesh::findPairs(double t){
+    truePairs();
+    if (t > 0){
+        distancePairs(t);
+    }
+    getUnique();
 };

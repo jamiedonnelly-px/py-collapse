@@ -16,6 +16,7 @@ struct Pair{
     // keep this idea of edge distance in mind
     bool operator==(const Pair& other) const;
     bool operator!=(const Pair& other) const;
+    bool operator<(const Pair& other) const;
 };
 struct Vertex{
     size_t index;
@@ -36,14 +37,15 @@ class Mesh{
         void setFaces(FaceMatrix f){
             _faces = f;
         };
-        void calculateEdges(double t=0);
-        void truePairs();
-        void distancePairs(double t=0);
+        void findPairs(double t=0);
 
     private:
         VertMatrix _verts;
         FaceMatrix _faces;
         std::vector<Pair> _pairs;
+        void truePairs();
+        void distancePairs(double t=0);
+        void getUnique();
 };
 
 #endif
