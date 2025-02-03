@@ -2,25 +2,31 @@
 // #include<pybind11/eigen.h>
 //namespace py = pybind11;
 
+#include<omp.h>
 #include<iostream>
 #include<Eigen/Core>
 
 #include "pairs.hpp"
 #include "mesh.hpp"
 #include "types.hpp"
+#include "io.hpp"
+
+using namespace std;
 
 int main(){
 
-    int n_verts = 5;
-    VertMatrix verts = Eigen::MatrixXd::Random(n_verts, 3);
-    FaceMatrix faces = Eigen::MatrixXi::Random(n_verts * 2, 3);
+    auto pair = readOBJ("/home/jamie.donnelly/py-collapse/data/bed.obj");
+
+    const auto& verts = pair.first;
+    const auto& faces = pair.second;
+
     Mesh mesh = Mesh(verts, faces);
 
-    std::cout << "Eigen version: " 
-              << EIGEN_WORLD_VERSION << "."
-              << EIGEN_MAJOR_VERSION << "."
-              << EIGEN_MINOR_VERSION << std::endl;
+    mesh.distancePairs(0.1);
 
+    cout << mesh.pairs().size() << endl;
+
+    cout << "Successfully ran main!" << endl;
 
     return 0;
 }

@@ -1,13 +1,19 @@
-.PHONY: all clean rebuild
+.PHONY: all clean run
 
 BUILD_DIR = build
 BINARY = main.o
 
-all:
+build:
 	@mkdir -p build
 	@cd build && cmake .. && make
 	@mkdir -p bin
 	@cp build/${BINARY} bin
+
+run:
+	@echo "Running main..."
+	@./bin/main.o
+
+all: clean build run
 
 clean:
 	@rm -rf build
