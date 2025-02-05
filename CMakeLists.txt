@@ -5,11 +5,11 @@ project(py-collapse)
 find_package(OpenMP REQUIRED)
 
 # Compiler settings
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
-set(CMAKE_CXX_FLAGS "-O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) 
 
 # Include paths

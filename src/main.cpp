@@ -5,9 +5,9 @@
 #include<omp.h>
 #include<iostream>
 #include<Eigen/Core>
+#include<Eigen/Dense>
 #include <chrono>
 
-#include "pairs.hpp"
 #include "mesh.hpp"
 #include "types.hpp"
 #include "io.hpp"
@@ -16,21 +16,22 @@ using namespace std;
 
 int main(){
 
-    auto pair = readOBJ("/home/jamie.donnelly/py-collapse/data/ankylosaurus.obj");
+    cout << EIGEN_WORLD_VERSION << "." << EIGEN_MAJOR_VERSION << "." << EIGEN_MINOR_VERSION << endl;
 
-    const auto& verts = pair.first;
-    const auto& faces = pair.second;
+    std::pair<VertMatrix, FaceMatrix> pair = readOBJ("/home/jamie.donnelly/py-collapse/data/ankylosaurus.obj");
 
+    const VertMatrix& verts = pair.first;
+    const FaceMatrix& faces = pair.second;
+
+    cout << "Number of rows: " <<  verts.rows() << endl;
+
+    auto start = chrono::high_resolution_clock::now();
     Mesh mesh = Mesh(verts, faces);
-
-    auto start = std::chrono::high_resolution_clock::now();
-    mesh.findPairs();
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Time taken: " << duration.count() << " milliseconds" << std::endl;
-
-    cout << mesh.pairs().size() << endl;
-
+    mesh.processVerts();
+    auto end = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
+    cout << "Time taken: " << duration.count() << " milliseconds" << endl;
+    cout << "Number of verts: " << mesh.vertList().size() << endl;
     cout << "Successfully ran main!" << endl;
 
     return 0;
